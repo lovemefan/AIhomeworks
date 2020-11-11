@@ -28,9 +28,14 @@ def softmax(x):
     return exp / exp.sum()
 
 def init_parmeters_b(layer):
+    """初始化参数b
+    :param layer 初始化第几层的参数
+    """
     dist = distributuion[layer]['b']
     return np.random.rand(dimensions[layer])
 
+def init_parmenters_w(layer):
+    pass
 
 arg = init_args()
 # 激活函数
