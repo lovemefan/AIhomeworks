@@ -6,9 +6,13 @@
 
 import argparse
 import math
-
 import numpy as np
+
+from week07.model import Model
+
+
 def init_args():
+    """初始化输入参数"""
     parser = argparse.ArgumentParser(description="输入参数")
     parser.add_argument('--input_dim', help='dimension of input')
     parser.add_argument('--hidden_dim', help='dimension of hidden layer')
@@ -17,41 +21,19 @@ def init_args():
     return args
 
 
-def tanh(x):
-    """tanh(x) = (e^x - e^-x)/(e^x + e^-x)"""
-    return  np.tanh(x)
 
 
-def softmax(x):
-    """softmax(x) = e^(x_i)/sum(e^(x_i))"""
-    exp = np.exp(x - x.max())
-    return exp / exp.sum()
 
-def init_parmeters_b(layer):
-    """初始化参数b
-    :param layer 初始化第几层的参数
-    """
-    dist = distributuion[layer]['b']
-    return np.random.rand(dimensions[layer])
 
-def init_parmenters_w(layer):
-    pass
 
-arg = init_args()
-# 激活函数
-activation = [tanh, softmax]
 
-dimensions = [int(arg.input_dim), int(arg.output_dim)]
-#
-distributuion = [
-    # 第一层,初始化b的取值范围
-    {'b': [0, 0]},
-    {'b': [0, 0], 'w': [-math.sqrt(6/(dimensions[0] + dimensions[1])), math.sqrt(6/(dimensions[0] + dimensions[1]))]}
-]
+
 if __name__ == '__main__':
-
-
-    x = np.array([1, 2, 3, -1])
-    print(tanh(0.1))
-    print(softmax(x))
-    print(distributuion)
+    # 初始化模型中所有的参数
+    args = init_args()
+    # 初始化模型参数
+    model = Model(args)
+    parameters = model.parameters
+    predict = predict_label(np.random.rand(784), parameters)
+    print(predict)
+    pass
