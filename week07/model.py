@@ -4,20 +4,8 @@
 # @Author  : lovemefan
 # @File    : model.py
 import math
-
-import argparse
 import numpy as np
 
-def init_args():
-    """初始化输入参数"""
-    parser = argparse.ArgumentParser(description="输入参数")
-    parser.add_argument('--input_dim', help='dimension of input', default=784)
-    parser.add_argument('--hidden_dim', help='dimension of hidden layer', default=1024)
-    parser.add_argument('--output_dim', help='dimension of output', default=10)
-    parser.add_argument('--batch_size', help='batch_size', default=64)
-    parser.add_argument('--learning_rate', help='learning_rate', default=0.01)
-    args = parser.parse_args()
-    return args
 
 class Model:
     """
@@ -143,7 +131,7 @@ class Model:
         :param label 输入样本的标签
         return 返回每个参数的偏导
         """
-        # 前向传播
+
         l0_in = img + self.parameters[0]['b']
         l0_out = self.tanh(l0_in)
 
@@ -156,6 +144,7 @@ class Model:
         # y_pred - y
         diff = l2_out - self.onehot_encode(label)
 
+        # 计算每个参数的梯度
         grad_b2 = 2*np.dot(diff, self.diffential[self.activetion[2]](l2_in))
         grad_w2 = np.outer(l1_out, grad_b2)
         # tanh的导数是一个以为矩阵，而不是对角矩阵，这里直接对应相乘
@@ -178,7 +167,7 @@ class Model:
         :param img 模型输入，图片像素拉成的的一维的矩阵
         :param parameters 模型的参数
         """
-
+        # 前向传播
         # 首先对输入加入偏置项
         l0_in = img + self.parameters[0]['b']
         l0_out = self.tanh(l0_in)
@@ -191,20 +180,4 @@ class Model:
 
         predict = l2_out.argmax()
         return predict
-
-
-if __name__ == '__main__':
-    # 验证公式的正确性
-    arg = init_args()
-    model = Model(arg)
-    input = np.random.rand(4)
-    # print(model.d_softmax(input))
-    print(model.d_tanh(input))
-    print(model.onehot_encode(5))
-    print(model.loss_function())
-    # d = 0.01
-    # h1 = model.d_softmax(input)
-    # input[0] += d
-    # h2 = model.d_softmax(input)
-    # print((h1-h2)/d)
 
