@@ -8,21 +8,20 @@ import argparse
 import math
 import numpy as np
 
+from week07.dataLoader import DataLoader
 from week07.model import Model
 
 
 def init_args():
     """初始化输入参数"""
     parser = argparse.ArgumentParser(description="输入参数")
-    parser.add_argument('--input_dim', help='dimension of input')
-    parser.add_argument('--hidden_dim', help='dimension of hidden layer')
-    parser.add_argument('--output_dim', help='dimension of output')
+    parser.add_argument('--input_dim', help='dimension of input', default=784)
+    parser.add_argument('--hidden_dim', help='dimension of hidden layer', default=1024)
+    parser.add_argument('--output_dim', help='dimension of output', default=10)
+    parser.add_argument('--batch_size', help='batch_size', default=64)
+    parser.add_argument('--learning_rate', help='learning_rate', default=0.01)
     args = parser.parse_args()
     return args
-
-
-
-
 
 
 
@@ -33,7 +32,10 @@ if __name__ == '__main__':
     args = init_args()
     # 初始化模型参数
     model = Model(args)
-    parameters = model.parameters
-    predict = predict_label(np.random.rand(784), parameters)
-    print(predict)
-    pass
+    dataLoader = DataLoader()
+    img = dataLoader.train_img[0]
+    label = dataLoader.train_label[0]
+    print(f"label：{label}")
+    predict = model.predict_label(dataLoader.train_img[0])
+    print(f"predict：{predict}")
+    model.grad_parameters(img,label)

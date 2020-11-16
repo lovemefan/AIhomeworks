@@ -16,7 +16,7 @@ class DataLoader:
     def __init__(self):
         self.download_dataset()
         relative_path_dir = 'data/mnist'
-        absolute_path_dir = os.path.join(sys.path[-1], relative_path_dir)
+        absolute_path_dir = os.path.join(os.path.dirname(os.getcwd()) , relative_path_dir)
         self.train_img_path = os.path.join(absolute_path_dir, 'train-images-idx3-ubyte')
         self.train_label_path = os.path.join(absolute_path_dir, 'train-labels-idx1-ubyte')
         self.test_img_path = os.path.join(absolute_path_dir, 't10k-images-idx3-ubyte')
@@ -52,11 +52,12 @@ class DataLoader:
         # 取出文件夹的路径
         relative_path_dir = 'data/mnist'
 
-        absolute_path_dir = os.path.join(sys.path[-1], relative_path_dir)
+        absolute_path_dir = os.path.join(os.path.dirname(os.getcwd()) , relative_path_dir)
 
         # 如果不存在就创建文件夹
         if not os.path.exists(absolute_path_dir):
             os.mkdir(absolute_path_dir)
+
 
         # 如果文件不存在
         absolute_path_file = os.path.join(absolute_path_dir, file_name)
@@ -76,14 +77,17 @@ class DataLoader:
 
     def un_gz(self, file_name):
         """ungz zip file"""
-        # 获取文件的名称，去掉
+
         f_name = file_name.replace(".gz", "")
-        # 创建gzip对象
-        g_file = gzip.GzipFile(file_name)
-        # gzip对象用read()打开后，写入open()建立的文件里。
-        open(f_name, "wb+").write(g_file.read())
-        # 关闭gzip对象
-        g_file.close()
+
+        if not os.path.exists(f_name):
+            # 获取文件的名称，去掉
+            # 创建gzip对象
+            g_file = gzip.GzipFile(file_name)
+            # gzip对象用read()打开后，写入open()建立的文件里。
+            open(f_name, "wb+").write(g_file.read())
+            # 关闭gzip对象
+            g_file.close()
 
     def load_data(self):
         """从文件中加载数据集"""
@@ -162,8 +166,7 @@ if __name__ == '__main__':
     image = dataLoader.test_img[0].reshape(28,28)
     plot.title(f"{dataLoader.test_label[0]}")
     plot.imshow(image, cmap='gray')
-    for batch_data, batch_label in dataLoader.get_train_batch(17):
-        print(batch_data.shape)
-        print(batch_label.shape)
+
+
 
 
