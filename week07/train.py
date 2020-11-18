@@ -6,7 +6,6 @@
 
 import argparse
 from tqdm import trange, tqdm
-import numpy as np
 from week07.dataLoader import DataLoader
 from week07.model import Model
 
@@ -28,7 +27,6 @@ def init_args():
 
 if __name__ == '__main__':
     # 初始化模型中所有的参数
-    np.zeros(1)
     args = init_args()
     # 初始化模型参数
     model = Model(args)

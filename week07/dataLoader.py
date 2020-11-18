@@ -98,7 +98,7 @@ class DataLoader:
             print(f"训练集共有{image_num}张图片，大小为{rows}*{columns}")
             # 读取数据
             self.train_img = np.array(struct.unpack(f'>{image_num * rows * columns}B', f.read()),
-                                      dtype=np.uint8).reshape(-1, rows * columns)
+                                      dtype=np.uint8).reshape(-1, rows * columns) / 255
 
         # 加载训练集标签
         with open(self.train_label_path, 'rb') as f:
@@ -111,7 +111,7 @@ class DataLoader:
             magic_number, image_num, rows, columns = struct.unpack('>4i', f.read(16))
             print(f"测试集共有{image_num}张图片，大小为{rows}*{columns}")
             self.test_img = np.array(struct.unpack(f'>{image_num * rows * columns}B', f.read()),
-                                     dtype=np.uint8).reshape(-1, rows * columns)
+                                     dtype=np.uint8).reshape(-1, rows * columns) / 255
 
         # 加载测试集标签
         with open(self.test_label_path, 'rb') as f:
