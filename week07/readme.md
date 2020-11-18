@@ -1,10 +1,3 @@
----
-title: 从零开始神经网络
-date: 2020/11/12 10:32:05
-author: lovemefan
-tags: [机器学习] 
----
-
 # 从零开始搭建神经网络-ANN
 
 [github](https://github.com/lovemefan/AIhomeworks/tree/master/week07)地址

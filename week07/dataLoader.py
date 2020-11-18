@@ -4,7 +4,6 @@
 # @Author  : lovemefan
 # @File    : dataLoader.py
 import os
-import sys
 import gzip
 import requests
 import struct

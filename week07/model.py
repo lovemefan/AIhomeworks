@@ -4,7 +4,11 @@
 # @Author  : lovemefan
 # @File    : model.py
 import math
+
+import argparse
 import numpy as np
+
+from week07.dataLoader import DataLoader
 
 
 class Model:
@@ -25,11 +29,11 @@ class Model:
         # 模型结构
         self.distribution = [
             # 第一层,初始化b的取值，[0,0] 表示初始化b的范围为[0,0]
-            {'b': [0, 0]},
+            {'b': [-1, 1]},
             # 第二层,初始化w，b的取值
-            {'b': [0, 0], 'w': [-math.sqrt(6 / (self.dimensions[0] + self.dimensions[1])),
+            {'b': [-1, -1], 'w': [-math.sqrt(6 / (self.dimensions[0] + self.dimensions[1])),
                                 math.sqrt(6 / (self.dimensions[0] + self.dimensions[1]))]},
-            {'b': [0, 0], 'w': [-math.sqrt(6 / (self.dimensions[1] + self.dimensions[2])),
+            {'b': [-1, 1], 'w': [-math.sqrt(6 / (self.dimensions[1] + self.dimensions[2])),
                                 math.sqrt(6 / (self.dimensions[1] + self.dimensions[2]))]}
         ]
         # 模型中用到的激活函数
@@ -65,8 +69,8 @@ class Model:
         """softmax对每个变量的导数
         返回一个二维矩阵，第i行表示对第i个求导
         """
-        mm = self.softmax(x)
-        return np.diag(mm) * np.outer(mm, mm)
+        sm = self.softmax(x)
+        return np.diag(sm) - np.outer(sm, sm)
 
     def sigmoid(self, x):
         """sigmoid 激活函数
@@ -114,16 +118,31 @@ class Model:
         one_hot[label] = 1
         return one_hot
 
-    def loss_function(self, img, label):
+    def loss_function(self, img_batch, label_batch):
         """这里的损失函数取二范数
         :param img 输入数据
         :param label 输入的标签
         :param parameters 模型的参数
         """
-        y_pred = self.predict_label(img, self.parameters)
-        y = self.onehot_encode(label)
-        diff = y - y_pred
-        return np.dot(diff, diff)
+        loss = 0
+        batch_size = 0
+
+        # 如果batch为1，label_batch为一个整数而不是列表
+        if type(label_batch) == np.uint8:
+            batch_size = 1
+        else:
+            batch_size = len(img_batch)
+
+        for i in range(batch_size):
+            y_pred = self.predict_label(img_batch[i])
+            # 如果batch为1，label_batch为一个整数而不是列表
+            if type(label_batch) == np.uint8 :
+                y = self.onehot_encode(label_batch)
+            else:
+                y = self.onehot_encode(label_batch[i])
+            diff = y - y_pred
+            loss += np.dot(diff, diff)
+        return loss
 
     def grad_parameters(self, img, label):
         """计算模型参数的梯度
@@ -145,13 +164,13 @@ class Model:
         diff = l2_out - self.onehot_encode(label)
 
         # 计算每个参数的梯度
-        grad_b2 = 2*np.dot(diff, self.diffential[self.activetion[2]](l2_in))
+        grad_b2 = 2*np.dot(self.diffential[self.activetion[2]](l2_in), diff)
         grad_w2 = np.outer(l1_out, grad_b2)
         # tanh的导数是一个以为矩阵，而不是对角矩阵，这里直接对应相乘
         grad_b1 = self.diffential[self.activetion[1]](l1_in)*np.dot(self.parameters[2]['w'], grad_b2)
-        grad_w1 = img @ grad_b1
+        grad_w1 = np.outer(img, grad_b1)
 
-        grad_b0 = np.dot(self.parameters[1]['w'] , grad_b1)
+        grad_b0 = np.dot(self.parameters[1]['w'], grad_b1)
 
         res = {'grad_w2':grad_w2,
                'grad_b2':grad_b2,
@@ -178,6 +197,64 @@ class Model:
         l2_in = np.dot(l1_out, self.parameters[2]['w']) + self.parameters[2]['b']
         l2_out = self.softmax(l2_in)
 
-        predict = l2_out.argmax()
+        predict = l2_out
         return predict
 
+    def train_batch(self, img_batch, label_batch, learnnig_rate):
+        """训练更新一次参数
+        :param img 模型输入，即图片像素拉成的的一维的矩阵
+        :param label 输入样本的标签
+        :param learnnig_rate 学习率
+        """
+        b0_total = np.zeros((self.dimensions[0]))
+        w1_total = np.zeros((self.dimensions[0], self.dimensions[1]))
+        b1_total = np.zeros((self.dimensions[1]))
+        w2_total = np.zeros((self.dimensions[1], self.dimensions[2]))
+        b2_total = np.zeros((self.dimensions[2]))
+
+        for item in range(len(img_batch)):
+            parameters = self.grad_parameters(img_batch[item], label_batch[item])
+            b0_total += parameters['grad_b0']
+            w1_total += parameters['grad_w1']
+            b1_total += parameters['grad_b1']
+            w2_total += parameters['grad_w2']
+            b2_total += parameters['grad_b2']
+
+
+
+        # 更新参数
+        self.parameters[0]['b'] -= learnnig_rate*b0_total
+        self.parameters[1]['b'] -= learnnig_rate*b1_total
+        self.parameters[1]['w'] -= learnnig_rate*w1_total
+        self.parameters[2]['b'] -= learnnig_rate*b2_total
+        self.parameters[2]['w'] -= learnnig_rate*w2_total
+
+    # def vaild_test(self, img_batch, label_batch):
+    #     for i in range(len(img_batch)):
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description="输入参数")
+    parser.add_argument('--input_dim', help='dimension of input', default=784)
+    parser.add_argument('--hidden_dim', help='dimension of hidden layer', default=1024)
+    parser.add_argument('--output_dim', help='dimension of output', default=10)
+    parser.add_argument('--batch_size', help='batch_size', default=32)
+    parser.add_argument('--learning_rate', help='learning_rate', default=1e-6)
+    args = parser.parse_args()
+
+    model = Model(args)
+    dataLoader = DataLoader()
+    h = 0.0001
+    # d_softmax 有效
+    func = model.softmax
+    input_len = 4
+    for i in range(input_len):
+        test_input = np.random.rand(input_len)
+        derivative = model.diffential[func](test_input)
+
+        value1 = func(test_input)
+        test_input[i] += h
+        value2 = func(test_input)
+        print(derivative[i] - (value2 - value1)/h)
+
+    loss = model.loss_function(dataLoader.train_img[0], dataLoader.train_label[0])
+    print(loss)
