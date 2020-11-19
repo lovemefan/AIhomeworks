@@ -1,7 +1,7 @@
 
 # 从零开始搭建神经网络-ANN
 
-[博客地址]([http://lovemefan.top/post/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%80/index.html%202020/11/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%80/](http://lovemefan.top/post/机器学习/从零开始神经网络一/index.html 2020/11/12/机器学习/从零开始神经网络一/))
+[博客地址][http://lovemefan.top/post/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%80/index.html%202020/11/12/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E4%B8%80/]
 
 训练好的模型参数：[parameters.pkl](https://github.com/lovemefan/AIhomeworks/blob/master/data/mnist/parameters.pkl)
 
