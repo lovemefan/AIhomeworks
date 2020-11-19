@@ -46,7 +46,7 @@ class DataLoader:
     def download_file(self, url, file_name):
         """从网络上下载文件，如果文件已存在则跳过下载
         :param url 文件网络路径
-        :param file_path 保存文件路径
+        :param file_name 保存文件名
         """
         # 取出文件夹的路径
         relative_path_dir = 'data/mnist'
@@ -131,8 +131,13 @@ class DataLoader:
 
         data_shape = self.train_img.shape
         batch = data_shape[0] // batch_size
+        # 如果训练集个数不是batch_size的整数倍，则batch数加一
+        if data_shape[0] % batch_size :
+            batch += 1
 
-        for i in range(batch+1):
+
+
+        for i in range(batch):
             yield (self.train_img[i*batch_size: min(data_shape[0], (i+1)*batch_size)],
                    self.train_label[i*batch_size: min(data_shape[0], (i+1)*batch_size)])
 
