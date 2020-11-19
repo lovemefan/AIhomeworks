@@ -17,7 +17,9 @@ def init_args():
     parser.add_argument('--hidden_dim', help='dimension of hidden layer', default=1024)
     parser.add_argument('--output_dim', help='dimension of output', default=10)
     parser.add_argument('--batch_size', help='batch_size', default=64)
-    parser.add_argument('--learning_rate', help='learning_rate', default=2e-6)
+    parser.add_argument('--learning_rate', help='learning_rate', default=2e-4)
+    parser.add_argument('--parameters', help='parameters file', default="parameters.pkl")
+
     args = parser.parse_args()
     return args
 
@@ -28,8 +30,15 @@ def init_args():
 if __name__ == '__main__':
     # 初始化模型中所有的参数
     args = init_args()
+
+    parameters = None
+    if args.parameters:
+        with open('parameters.pkl', 'rb') as file_to_read:
+            # 通过pickle的load函数读取data1.pkl中的对象，并赋值给data2
+            parameters = pickle.load(file_to_read)
+
     # 初始化模型参数
-    model = Model(args)
+    model = Model(args, parameters)
     dataLoader = DataLoader()
     batch_generator = dataLoader.get_train_batch(int(args.batch_size))
     epoch_size = 1
@@ -67,14 +76,12 @@ if __name__ == '__main__':
         print(f"train_accuracy:{train_accuracy}")
         print(f"test_accuracy:{test_accuracy}")
 
-    # 打开(或创建)一个名为data1.pkl的文件，打开方式为二进制写入(参数‘wb’)
-    file_to_save = open("parameters.pkl", "wb")
 
-    # 通过pickle模块中的dump函数将data1保存到data1.pkl文件中。
-    # 第一个参数是要保存的对象名
-    # 第二个参数是写入到的类文件对象file。file必须有write()接口， file可以是一个以'w'方式打开的文件或者一个StringIO对象或者其他任何实现write()接口的对象。如果protocol>=1，文件对象需要是二进制模式打开的。
-    # 第三个参数为序列化使用的协议版本，0：ASCII协议，所序列化的对象使用可打印的ASCII码表示；1：老式的二进制协议；2：2.3版本引入的新二进制协议，较以前的更高效；-1：使用当前版本支持的最高协议。其中协议0和1兼容老版本的python。protocol默认值为0。
-    pickle.dump(model.parameters, file_to_save, -1)
+        # 保存参数
+        # 打开(或创建)一个名为parameters.pkl的文件，打开方式为二进制写入(参数‘wb’)
+        with open("parameters.pkl", "wb") as  file_to_save:
+            # 通过pickle模块中的dump函数将data1保存到data1.pkl文件中。
+            # 第三个参数为序列化使用的协议版本，0：ASCII协议，所序列化的对象使用可打印的ASCII码表示；1：老式的二进制协议；2：2.3版本引入的新二进制协议，较以前的更高效；-1：使用当前版本支持的最高协议。其中协议0和1兼容老版本的python。protocol默认值为0。
+            pickle.dump(model.parameters, file_to_save, -1)
 
-    # 关闭文件对象
-    file_to_save.close()
+
