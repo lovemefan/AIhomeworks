@@ -127,7 +127,7 @@ class DataLoader:
         :returns (data, label) 返回一个元组，分别是数据矩阵与标签矩阵
         """
         # 如果没有指定batch_size 就返回所有数据
-        if not batch_size: return (self.train_img, )
+        if not batch_size: return (self.train_img, self.train_label)
 
         data_shape = self.train_img.shape
         batch = data_shape[0] // batch_size

@@ -241,6 +241,7 @@ if __name__ == '__main__':
     parser.add_argument('--learning_rate', help='learning_rate', default=1e-6)
     args = parser.parse_args()
 
+    # 以下用来检验softmax的导数是否有效
     model = Model(args)
     dataLoader = DataLoader()
     h = 0.0001
