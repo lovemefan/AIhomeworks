@@ -16,7 +16,7 @@ def init_args():
     parser.add_argument('--input_dim', help='dimension of input', default=784)
     parser.add_argument('--hidden_dim', help='dimension of hidden layer', default=1024)
     parser.add_argument('--output_dim', help='dimension of output', default=10)
-    parser.add_argument('--batch_size', help='batch_size', default=64)
+    parser.add_argument('--batch_size', help='batch_size', default=256)
     parser.add_argument('--learning_rate', help='learning_rate', default=2e-4)
     parser.add_argument('--parameters', help='parameters file', default="parameters.pkl")
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         with open('parameters.pkl', 'rb') as file_to_read:
             # 通过pickle的load函数读取data1.pkl中的对象，并赋值给data2
             parameters = pickle.load(file_to_read)
-
+    parameters = None
     # 初始化模型参数
     model = Model(args, parameters)
     dataLoader = DataLoader()
