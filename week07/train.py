@@ -65,19 +65,19 @@ if __name__ == '__main__':
         train_data_size = len(train_data[1])
         tmp = [model.predict_label(train_data[0][i]).argmax() == train_data[1][i] for i in range(train_data_size)]
         train_accuracy_tmp = tmp.count(True) / len(tmp)
-
+        train_accuracy.append(train_accuracy_tmp)
 
         # 利用测试集检验准确率
         test_data = (dataLoader.test_img, dataLoader.test_label)
         test_data_size = len(test_data[1])
         tmp = [model.predict_label(test_data[0][i]).argmax() == test_data[1][i] for i in range(test_data_size)]
         test_accuracy_temp = tmp.count(True)/len(tmp)
-        test_accuracy.append(test_loss_temp)
+        test_accuracy.append(test_accuracy_temp)
 
         print(f"train_loss:{train_loss_temp}")
         print(f"test_loss:{test_loss_temp}")
-        print(f"train_accuracy:{train_accuracy}")
-        print(f"test_accuracy:{test_accuracy}")
+        print(f"train_accuracy:{train_accuracy_tmp}")
+        print(f"test_accuracy:{test_accuracy_temp}")
 
 
         # 保存参数
