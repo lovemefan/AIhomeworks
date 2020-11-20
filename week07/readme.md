@@ -114,3 +114,4 @@ $$
 
 ![loss](https://raw.githubusercontent.com/lovemefan/AIhomeworks/master/week07/loss.png)
 
+![accuracy](https://github.com/lovemefan/AIhomeworks/raw/master/week07/accuracy.png)
