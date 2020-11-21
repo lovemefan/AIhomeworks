@@ -8,3 +8,5 @@
 感知机
 ## 第七周
 [从零开始手写ANN神经网络，实现手写数字识别](https://github.com/lovemefan/AIhomeworks/tree/master/week07)
+## 
+[基于pytorch实现LSTM](https://github.com/lovemefan/AIhomeworks/tree/master/week07)
